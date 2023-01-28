@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <!-- Load office.js and xlwings.min.js -->
+    <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/xlwings/xlwings@0.29.0/xlwingsjs/dist/xlwings.min.js"></script>
+</head>
+
+<body>
+    <script>
+        // Initialize Office.js
+        Office.onReady(function (info) { });
+
+        // Make sure to provide the event argument and call
+        // event.completed() at the end of functions that
+        // are directly associated with Ribbon buttons
+        function hello(event) {
+            xlwings.runPython(window.location.origin + "/hello");
+            event.completed();
+        }
+        // You must associate the FunctionName from manifest.xml ("run")
+        // with the JavaScript function name (hello)
+        Office.actions.associate("run", hello);
+    </script>
+</body>
+
+</html>

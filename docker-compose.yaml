@@ -1,0 +1,18 @@
+version: '3.7'
+
+services:
+  app:
+    build: .
+    command: >
+        uvicorn app.server_fastapi:app
+        --host 0.0.0.0 --port 8000
+        --ssl-keyfile /localhost+2-key.pem --ssl-certfile /localhost+2.pem
+        --reload
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./app:/app
+      - ./localhost+2.pem:/localhost+2.pem
+      - ./localhost+2-key.pem:/localhost+2-key.pem
+    env_file:
+      - .env
