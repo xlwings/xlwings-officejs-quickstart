@@ -4,7 +4,6 @@ import jinja2
 import markupsafe
 import xlwings as xw
 from starlette.applications import Starlette
-from starlette.requests import Request
 from starlette.responses import JSONResponse, PlainTextResponse
 from starlette.routing import Mount, Route
 from starlette.staticfiles import StaticFiles
@@ -20,14 +19,14 @@ async def hello(request):
 
     # Use xlwings as usual
     sheet = book.sheets[0]
-    cell = sheet["abcdef"]
+    cell = sheet["A1"]
     if cell.value == "Hello xlwings!":
         cell.value = "Bye xlwings!"
     else:
         cell.value = "Hello xlwings!"
 
     # Pass the following back as the response
-    return JSONResponse(content=book.json())
+    return JSONResponse(book.json())
 
 
 async def capitalize_sheet_names_prompt(request):
