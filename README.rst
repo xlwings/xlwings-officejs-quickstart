@@ -14,7 +14,7 @@ This quickstart shows you how you can call Python both from a button on the task
      $ ./mkcert -install
      $ ./mkcert localhost 127.0.0.1 ::1
 
-   This will generate two files ``localhost+2.pem`` and ``localhost+2-key.pem``: move them to the root of the ``xlwings-officejs-quickstart`` quickstart repo.
+   This will generate two files ``localhost+2.pem`` and ``localhost+2-key.pem``: move them to the ``certs`` directory in the root of the ``xlwings-officejs-quickstart`` quickstart repo.
 
 4. **Install Python dependencies**: 
    

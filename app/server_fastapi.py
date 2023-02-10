@@ -102,6 +102,6 @@ if __name__ == "__main__":
         host="127.0.0.1",
         port=8000,
         reload=True,
-        ssl_keyfile=this_dir.parent / "localhost+2-key.pem",
-        ssl_certfile=this_dir.parent / "localhost+2.pem",
+        ssl_keyfile=this_dir.parent / "certs" / "localhost+2-key.pem",
+        ssl_certfile=this_dir.parent / "certs" / "localhost+2.pem",
     )
