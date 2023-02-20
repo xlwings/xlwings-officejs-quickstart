@@ -4,7 +4,7 @@ services:
   app:
     build: .
     command: >
-        uvicorn app.server_fastapi:app
+        uvicorn server_fastapi:app
         --host 0.0.0.0 --port 8000
         --ssl-keyfile /certs/localhost+2-key.pem --ssl-certfile /certs/localhost+2.pem
         --reload

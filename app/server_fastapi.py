@@ -1,9 +1,11 @@
 from pathlib import Path
 
+import custom_functions
 import jinja2
 import markupsafe
 import xlwings as xw
 from fastapi import Body, FastAPI, Request, status
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse, PlainTextResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -69,6 +71,22 @@ async def alert(
     )
 
 
+@app.get("/xlwings/custom-functions-meta")
+async def custom_functions_meta():
+    return xw.pro.custom_functions_meta(custom_functions)
+
+
+@app.get("/xlwings/custom-functions-code")
+async def custom_functions_code():
+    return PlainTextResponse(xw.pro.custom_functions_code(custom_functions))
+
+
+@app.post("/xlwings/custom-functions-call")
+async def custom_functions_call(data: dict = Body):
+    rv = await xw.pro.custom_functions_call(data, custom_functions)
+    return {"result": rv}
+
+
 # Add xlwings.html as additional source for templates so the /xlwings/alert endpoint
 # will find xlwings-alert.html. "mytemplates" can be a dummy if the app doesn't use
 # own templates
@@ -86,12 +104,22 @@ app.mount("/", StaticFiles(directory=this_dir), name="home")
 # Never cache static files
 StaticFiles.is_not_modified = lambda *args, **kwargs: False
 
+
 # Show XlwingsError in clear text instead of "Internal Server Error"
 @app.exception_handler(xw.XlwingsError)
 async def xlwings_exception_handler(request, exception):
     return PlainTextResponse(
         str(exception), status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
     )
+
+
+# Required when called from Excel on the web
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins="*",
+    allow_methods=["POST"],
+    allow_headers=["*"],
+)
 
 
 if __name__ == "__main__":

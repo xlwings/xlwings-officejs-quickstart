@@ -4,10 +4,12 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>My Taskpane</title>
+    <title>My Task Pane</title>
     <!-- Load office.js and xlwings.min.js -->
     <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/xlwings/xlwings@0.29.0/xlwingsjs/dist/xlwings.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/xlwings/xlwings@0.30.0/xlwingsjs/dist/xlwings.min.js"></script>
+    <!-- Load Custom Functions -->
+    <script type="text/javascript" src="/xlwings/custom-functions-code"></script>
 </head>
 
 <body>
@@ -17,6 +19,11 @@
     <script>
         // Initialize Office.js
         Office.onReady(function (info) { });
+
+        // This is required for authentication and must not be deleted
+        globalThis.getAuth = async function () {
+            return ""
+        };
 
         // Add click event listeners to buttons
         document.getElementById("run").addEventListener("click", hello);
@@ -31,8 +38,9 @@
             xlwings.runPython(window.location.origin + "/capitalize-sheet-names-prompt");
         }
 
-        // This function gets called when the user clicks a button in the alert of capitalizeSheetNamesPrompt
-        // Use the function name as the callback parameter in Python: book.app.alert(callback="capitalizeSheetNames")
+        // This function gets called when the user clicks a button in the alert shown
+        // by capitalizeSheetNamesPrompt. Use this function name as the callback parameter
+        // in Python: book.app.alert(callback="capitalizeSheetNames")
         function capitalizeSheetNames(arg) {
             if (arg == "ok") {
                 xlwings.runPython(window.location.origin + "/capitalize-sheet-names");

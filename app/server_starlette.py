@@ -1,9 +1,12 @@
 from pathlib import Path
 
+import custom_functions
 import jinja2
 import markupsafe
 import xlwings as xw
 from starlette.applications import Starlette
+from starlette.middleware import Middleware
+from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import JSONResponse, PlainTextResponse
 from starlette.routing import Mount, Route
 from starlette.staticfiles import StaticFiles
@@ -66,6 +69,20 @@ async def alert(request):
     )
 
 
+async def custom_functions_meta(request):
+    return JSONResponse(xw.pro.custom_functions_meta(custom_functions))
+
+
+async def custom_functions_code(request):
+    return PlainTextResponse(xw.pro.custom_functions_code(custom_functions))
+
+
+async def custom_functions_call(request):
+    data = await request.json()
+    rv = await xw.pro.custom_functions_call(data, custom_functions)
+    return JSONResponse({"result": rv})
+
+
 # Add xlwings.html as additional source for templates so the /xlwings/alert endpoint
 # will find xlwings-alert.html. "mytemplates" can be a dummy if the app doesn't use
 # own templates
@@ -94,6 +111,9 @@ routes = [
     ),
     Route("/capitalize-sheet-names", capitalize_sheet_names, methods=["POST"]),
     Route("/xlwings/alert", alert),
+    Route("/xlwings/custom-functions-meta", custom_functions_meta),
+    Route("/xlwings/custom-functions-code", custom_functions_code),
+    Route("/xlwings/custom-functions-call", custom_functions_call, methods=["POST"]),
     # Serve static files (HTML and icons)
     # This could also be handled by an external web server such as nginx, etc.
     Mount("/", StaticFiles(directory=this_dir)),
@@ -101,7 +121,15 @@ routes = [
 # Never cache static files
 StaticFiles.is_not_modified = lambda *args, **kwargs: False
 
-app = Starlette(debug=True, routes=routes, exception_handlers=exception_handlers)
+# Required when called from Excel on the web
+middleware = [Middleware(CORSMiddleware, allow_origins=["*"])]
+
+app = Starlette(
+    debug=True,
+    routes=routes,
+    middleware=middleware,
+    exception_handlers=exception_handlers,
+)
 
 
 if __name__ == "__main__":
