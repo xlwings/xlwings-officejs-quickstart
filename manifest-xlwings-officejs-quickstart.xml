@@ -19,6 +19,12 @@
   <Hosts>
     <Host Name="Workbook" />
   </Hosts>
+  <!-- SharedRuntime for Custom Functions -->
+  <Requirements>
+    <Sets DefaultMinVersion="1.1">
+      <Set Name="SharedRuntime" MinVersion="1.1"/>
+    </Sets>
+  </Requirements>
   <DefaultSettings>
     <SourceLocation DefaultValue="https://127.0.0.1:8000/taskpane.html" />
   </DefaultSettings>
@@ -26,6 +32,26 @@
   <VersionOverrides xmlns="http://schemas.microsoft.com/office/taskpaneappversionoverrides" xsi:type="VersionOverridesV1_0">
     <Hosts>
       <Host xsi:type="Workbook">
+
+        <!-- Custom Functions -->
+        <Runtimes>
+          <Runtime resid="Taskpane.Url" lifetime="long"/>
+        </Runtimes>
+        <AllFormFactors>
+          <ExtensionPoint xsi:type="CustomFunctions">
+            <Script>
+              <SourceLocation resid="Functions.Script.Url"/>
+            </Script>
+            <Page>
+              <SourceLocation resid="Taskpane.Url"/>
+            </Page>
+            <Metadata>
+              <SourceLocation resid="Functions.Metadata.Url"/>
+            </Metadata>
+            <Namespace resid="Functions.Namespace"/>
+          </ExtensionPoint>
+        </AllFormFactors>
+
         <DesktopFormFactor>
           <!-- resid must point to a Url Resource -->
           <FunctionFile resid="Commands.Url" />
@@ -102,8 +128,12 @@
         <bt:Url id="Commands.Url" DefaultValue="https://127.0.0.1:8000/commands.html" />
         <!-- This must point to the HTML document with the task pane -->
         <bt:Url id="Taskpane.Url" DefaultValue="https://127.0.0.1:8000/taskpane.html" />
+        <bt:Url id="Functions.Script.Url" DefaultValue="https://127.0.0.1:8000/xlwings/custom-functions-code"/>
+        <bt:Url id="Functions.Metadata.Url" DefaultValue="https://127.0.0.1:8000/xlwings/custom-functions-meta"/>
       </bt:Urls>
       <bt:ShortStrings>
+        <!-- Uncomment the next line to use a global Namespace. It can also be set per function via xw.func(namespace="...") -->
+        <!-- <bt:String id="Functions.Namespace" DefaultValue="XLWINGS"/> -->
         <bt:String id="MyTab.TabLabel" DefaultValue="Quickstart" />
         <bt:String id="MyCommandsGroup.Label" DefaultValue="MyGroup" />
         <bt:String id="MyFunctionButton.Label" DefaultValue="Hello World" />
