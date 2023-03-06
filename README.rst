@@ -1,9 +1,18 @@
-Build Office.js add-ins with Python and xlwings
------------------------------------------------
+Build Office.js add-ins and custom functions with Python and xlwings
+--------------------------------------------------------------------
 
-For the full docs, see: https://docs.xlwings.org/en/stable/officejs_addins.html
+* For an introduction to Office.js and how to create add-ins with the ``runPython`` command, see: https://docs.xlwings.org/en/latest/pro/server/officejs_addins.html
+* For the custom functions docs, see: https://docs.xlwings.org/en/latest/pro/server/officejs_custom_functions.html
 
-This quickstart shows you how you can call Python both from a button on the task pane and directly from a Ribbon button. xlwings can be used with any web framework and the quickstart repo therefore contains various implementations such as ``app/server_fastapi.py`` or ``app/server_starlette.py``. At the end of this quickstart, you'll have a working environment for local development.
+This quickstart shows you:
+
+* How you can call Python both from a button on the task pane
+* How you can call Python directly from a Ribbon button
+* How to use custom functions (a.k.a user-defined functinos or UDFs)
+
+xlwings Server, the backend for Office.js-based add-ins, can be used with any web framework and the quickstart repo therefore contains various implementations such as ``app/server_fastapi.py`` or ``app/server_starlette.py``.
+
+At the end of this quickstart, you'll have a working environment for local development.
 
 1. **Download quickstart repo**: Use Git to clone the following repository: https://github.com/xlwings/xlwings-officejs-quickstart. If you don't want to use Git, you could also download the repo by clicking on the green ``Code`` button, followed by ``Download ZIP``, then unzipping it locally.
 2. **Update manifest**: If you want to build your own add-in based off this quickstart repo, replace ``<Id>xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx</Id>`` in ``manifest-xlwings-officejs-quickstart.xml`` with a unique ID that you can create by visiting https://www.guidgen.com or by running the following command in Python: ``import uuid;print(uuid.uuid4())``.
@@ -45,4 +54,4 @@ This quickstart shows you how you can call Python both from a button on the task
 
 
 7. **Sideload the add-in**: Manually load ``manifest-xlwings-officejs-quickstart.xml`` in Excel. This is called *sideloading* and the process differs depending on the platform you're using, see `Office.js docs <https://learn.microsoft.com/en-us/office/dev/add-ins/testing/test-debug-office-add-ins#sideload-an-office-add-in-for-testing>`_ for instructions. Once you've sideloaded the manifest, you'll see the ``Quickstart`` tab in the Ribbon.
-8. **Time to play**: You're now ready to play around with the add-in in Excel and make changes to the source code under ``app/server_fastapi.py`` or under the respective file of your framework. Every time you edit and save the Python code, the development server will restart automatically so that you can instantly try out the code changes in Excel. If you make changes to the HTML file, you'll need to right-click on the task pane and select ``Reload``.
+8. **Time to play**: You're now ready to play around with the add-in in Excel and make changes to the source code that gets called via ``runPython`` under ``app/server_fastapi.py`` or under the respective file of your framework. To change the source code for custom functions, edit the ``app/custom_function.py`` file. Every time you edit and save the Python code, the development server will restart automatically so that you can instantly try out the code changes in Excel. If you make changes to the HTML file, you'll need to right-click on the task pane and select ``Reload``.
