@@ -6,9 +6,9 @@ Build Office.js add-ins and custom functions with Python and xlwings
 
 This quickstart shows you:
 
-* How you can call Python both from a button on the task pane
-* How you can call Python directly from a Ribbon button
-* How to use custom functions (a.k.a user-defined functinos or UDFs)
+* How to call Python from a button on the task pane
+* How to call Python directly from a Ribbon button
+* How to use custom functions (a.k.a user-defined functions or UDFs)
 
 xlwings Server, the backend for Office.js-based add-ins, can be used with any web framework and the quickstart repo therefore contains various implementations such as ``app/server_fastapi.py`` or ``app/server_starlette.py``.
 
