@@ -53,8 +53,8 @@
         </AllFormFactors>
 
         <DesktopFormFactor>
-          <!-- resid must point to a Url Resource -->
-          <FunctionFile resid="Commands.Url" />
+          <!-- FunctionFile is used to bind functions directly to Ribbon buttons -->
+          <FunctionFile resid="Taskpane.Url" />
           <ExtensionPoint xsi:type="PrimaryCommandSurface">
 
             <CustomTab id="MyTab">
@@ -84,7 +84,7 @@
                   <!--Action type must be ExecuteFunction -->
                   <Action xsi:type="ExecuteFunction">
                     <!-- This is the name that you use in Office.actions.associate() to connect it to a function -->
-                    <FunctionName>run</FunctionName>
+                    <FunctionName>hello-ribbon</FunctionName>
                   </Action>
                 </Control>
 
@@ -124,8 +124,6 @@
         <bt:Image id="Icon.80x80" DefaultValue="https://127.0.0.1:8000/icons/icon-80.png" />
       </bt:Images>
       <bt:Urls>
-        <!-- This must point to the HTML document with the function -->
-        <bt:Url id="Commands.Url" DefaultValue="https://127.0.0.1:8000/commands.html" />
         <!-- This must point to the HTML document with the task pane -->
         <bt:Url id="Taskpane.Url" DefaultValue="https://127.0.0.1:8000/taskpane.html" />
         <bt:Url id="Functions.Script.Url" DefaultValue="https://127.0.0.1:8000/xlwings/custom-functions-code"/>
