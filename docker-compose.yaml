@@ -1,4 +1,4 @@
-# This file is only for local development
+# This file is used for elastic-beanstalk deployment
 version: '3.7'
 
 services:

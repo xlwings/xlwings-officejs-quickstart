@@ -14,6 +14,10 @@ app = FastAPI()
 
 this_dir = Path(__file__).resolve().parent
 
+@app.get("/")
+async def index():
+    return {"status": "ok"}
+
 
 @app.post("/hello")
 async def hello(data: dict = Body):
