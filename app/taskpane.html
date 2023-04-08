@@ -2,65 +2,69 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>My Task Pane</title>
-    <!-- Load office.js and xlwings.min.js -->
-    <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/xlwings/xlwings@0.30.4/xlwingsjs/dist/xlwings.min.js"></script>
-    <!-- Load Custom Functions -->
-    <script type="text/javascript" src="/xlwings/custom-functions-code"></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>My Task Pane</title>
+  <!-- Load office.js and xlwings.min.js -->
+  <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/xlwings/xlwings@0.30.4/xlwingsjs/dist/xlwings.min.js"></script>
+  <!-- Bootstrap with the xlwings theme -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/xlwings/bootstrap-xlwings@5.2.3-1/dist/bootstrap-xlwings.min.css" integrity="sha384-i5I2lAVAlgW17zIpddwzMBj4fo3zQqx+CMxfm4B9qjxz6QloL4/c3J0V8cyk89S1" crossorigin="anonymous">
+  <!-- Load Custom Functions -->
+  <script type="text/javascript" src="/xlwings/custom-functions-code"></script>
 </head>
 
 <body>
+  <div class="container-fluid pt-3">
     <!-- Put two buttons on the task pane -->
-    <button id="btn-hello-taskpane" type="button">Run hello</button>
-    <button id="btn-capitalize-sheet-names" type="button">Capitalize sheet names</button>
-    <script>
-        // Initialize Office.js
-        Office.onReady(function (info) { });
+    <button class="btn btn-primary btn-sm" id="btn-hello-taskpane" type="button">Run hello</button>
+    <button class="btn btn-primary btn-sm" id="btn-capitalize-sheet-names" type="button">Capitalize sheet names</button>
+  </div>
+  <script>
+    // Initialize Office.js
+    Office.onReady(function (info) { });
 
-        // This is required for authentication and must not be deleted
-        globalThis.getAuth = async function () {
-            return ""
-        };
+    // This is required for authentication and must not be deleted
+    globalThis.getAuth = async function () {
+      return ""
+    };
 
-        // Add click event listeners to buttons on task pane
-        document.getElementById("btn-hello-taskpane").addEventListener("click", helloTaskpane);
-        document.getElementById("btn-capitalize-sheet-names").addEventListener("click", capitalizeSheetNamesPrompt);
+    // Add click event listeners to buttons on task pane
+    document.getElementById("btn-hello-taskpane").addEventListener("click", helloTaskpane);
+    document.getElementById("btn-capitalize-sheet-names").addEventListener("click", capitalizeSheetNamesPrompt);
 
-        // Sample 1: Button on Task pane
-        // Use runPython with the desired endpoint of your web app 
-        function helloTaskpane() {
-            xlwings.runPython(window.location.origin + "/hello");
-        }
+    // Sample 1: Button on Task pane
+    // Use runPython with the desired endpoint of your web app 
+    function helloTaskpane() {
+      xlwings.runPython(window.location.origin + "/hello");
+    }
 
-        // Sample 2: Button on Ribbon
-        // Needs event.completed() and Office.actions.associate
-        // "hello-ribbon" is the identifier in manifest.xml
-        function helloRibbon(event) {
-            xlwings.runPython(window.location.origin + "/hello");
-            event.completed();
-        }
-        Office.actions.associate("hello-ribbon", helloRibbon);
+    // Sample 2: Button on Ribbon
+    // Needs event.completed() and Office.actions.associate
+    // "hello-ribbon" is the identifier in manifest.xml
+    function helloRibbon(event) {
+      xlwings.runPython(window.location.origin + "/hello");
+      event.completed();
+    }
+    Office.actions.associate("hello-ribbon", helloRibbon);
 
-        // Sample 3: How to use alerts
-        function capitalizeSheetNamesPrompt() {
-            xlwings.runPython(window.location.origin + "/capitalize-sheet-names-prompt");
-        }
-        // This function gets called when the user clicks a button in the alert shown
-        // by capitalizeSheetNamesPrompt. Use this function name as the callback parameter
-        // in Python: book.app.alert(callback="capitalizeSheetNames")
-        function capitalizeSheetNames(arg) {
-            if (arg == "ok") {
-                xlwings.runPython(window.location.origin + "/capitalize-sheet-names");
-            } else {
-                // cancel
-            }
-        }
-        // Make sure to register the callback function
-        xlwings.registerCallback(capitalizeSheetNames);
-    </script>
+    // Sample 3: How to use alerts
+    function capitalizeSheetNamesPrompt() {
+      xlwings.runPython(window.location.origin + "/capitalize-sheet-names-prompt");
+    }
+    // This function gets called when the user clicks a button in the alert shown
+    // by capitalizeSheetNamesPrompt. Use this function name as the callback parameter
+    // in Python: book.app.alert(callback="capitalizeSheetNames")
+    function capitalizeSheetNames(arg) {
+      if (arg == "ok") {
+        xlwings.runPython(window.location.origin + "/capitalize-sheet-names");
+      } else {
+        // cancel
+      }
+    }
+    // Make sure to register the callback function
+    xlwings.registerCallback(capitalizeSheetNames);
+  </script>
 </body>
 
 </html>
