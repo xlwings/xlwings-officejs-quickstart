@@ -15,6 +15,10 @@ from starlette.templating import Jinja2Templates
 this_dir = Path(__file__).resolve().parent
 
 
+async def root(request):
+    return JSONResponse({"status": "ok"})
+
+
 async def hello(request):
     # Instantiate a Book object with the deserialized request body
     data = await request.json()
@@ -114,6 +118,7 @@ routes = [
     Route("/xlwings/custom-functions-meta", custom_functions_meta),
     Route("/xlwings/custom-functions-code", custom_functions_code),
     Route("/xlwings/custom-functions-call", custom_functions_call, methods=["POST"]),
+    Route("/", root),
     # Serve static files (HTML and icons)
     # This could also be handled by an external web server such as nginx, etc.
     Mount("/", StaticFiles(directory=this_dir)),
