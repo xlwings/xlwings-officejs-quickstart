@@ -1,40 +1,40 @@
-# Based on https://arunrocks.com/django-application-in-one-file/
-# Run with: python app/server_django.py runserver
-# pip install django-sslserver
 # python app/server_django.py runsslserver --certificate certs/localhost+2.pem --key certs/localhost+2-key.pem
-from pathlib import Path
-import sys
 import json
-import markupsafe
+import sys
+from pathlib import Path
 
+import custom_functions
+import markupsafe
+import xlwings as xw
 from django.conf import settings
+from django.conf.urls.static import static
+from django.http import HttpResponse, JsonResponse
 from django.template import loader
 from django.urls import path
-from django.http import JsonResponse
-from django.conf.urls.static import static
-
-from django.shortcuts import render
-from django.http import HttpResponse
-
-import xlwings as xw
 
 BASE_DIR = Path(__file__).resolve().parent
 
-xlwings_template_dir = Path(xw.__file__).parent / "html"
-
 settings.configure(
     DEBUG=True,
-    SECRET_KEY="changeme",
+    # Office Scripts and custom functions in Excel on the web require CORS
+    CORS_ALLOW_ALL_ORIGINS=True,
     ROOT_URLCONF=__name__,
-    INSTALLED_APPS=["sslserver"],
+    INSTALLED_APPS=["sslserver", "corsheaders"],
     STATICFILES_DIRS=[BASE_DIR],
     TEMPLATES=[
         {
             "BACKEND": "django.template.backends.jinja2.Jinja2",
-            "DIRS": [xlwings_template_dir],
+            "DIRS": [Path(xw.__file__).parent / "html"],
         },
     ],
+    MIDDLEWARE=[
+        "corsheaders.middleware.CorsMiddleware",
+    ],
 )
+
+
+def root(request):
+    return JsonResponse({"status": "ok"})
 
 
 def hello(request):
@@ -92,7 +92,7 @@ def alert(request):
     buttons = request.GET.get("buttons")
     mode = request.GET.get("mode")
     callback = request.GET.get("callback")
-    template = loader.get_template('xlwings-alert.html')
+    template = loader.get_template("xlwings-alert.html")
     context = {
         "prompt": markupsafe.Markup(prompt.replace("\n", "<br>")),
         "title": title,
@@ -103,12 +103,34 @@ def alert(request):
     return HttpResponse(template.render(context, request))
 
 
+def custom_functions_meta(request):
+    """Boilerplate required by custom functions"""
+    return JsonResponse(xw.pro.custom_functions_meta(custom_functions))
+
+
+def custom_functions_code(request):
+    """Boilerplate required by custom functions"""
+    return HttpResponse(
+        xw.pro.custom_functions_code(custom_functions), content_type="text/plain"
+    )
+
+
+async def custom_functions_call(request):
+    """Boilerplate required by custom functions"""
+    data = json.loads(request.body.decode("utf-8"))
+    rv = await xw.pro.custom_functions_call(data, custom_functions)
+    return JsonResponse({"result": rv})
+
+
 urlpatterns = [
-    path("", lambda request: JsonResponse({"status": "ok"})),
+    path("", root),
     path("hello", hello),
     path("capitalize-sheet-names-prompt", capitalize_sheet_names_prompt),
     path("capitalize-sheet-names", capitalize_sheet_names),
     path("xlwings/alert", alert),
+    path("xlwings/custom-functions-meta", custom_functions_meta),
+    path("xlwings/custom-functions-code", custom_functions_code),
+    path("xlwings/custom-functions-call", custom_functions_call),
 ] + static("/", document_root=BASE_DIR)
 
 if __name__ == "__main__":
