@@ -1,4 +1,3 @@
-# python app/server_django.py runsslserver --certificate certs/localhost+2.pem --key certs/localhost+2-key.pem
 import json
 import sys
 from pathlib import Path
@@ -16,17 +15,16 @@ BASE_DIR = Path(__file__).resolve().parent
 
 settings.configure(
     DEBUG=True,
-    # Office Scripts and custom functions in Excel on the web require CORS
-    CORS_ALLOW_ALL_ORIGINS=True,
     ROOT_URLCONF=__name__,
-    INSTALLED_APPS=["sslserver", "corsheaders"],
-    STATICFILES_DIRS=[BASE_DIR],
     TEMPLATES=[
         {
             "BACKEND": "django.template.backends.jinja2.Jinja2",
             "DIRS": [Path(xw.__file__).parent / "html"],
         },
     ],
+    # Office Scripts and custom functions in Excel on the web require CORS
+    INSTALLED_APPS=["sslserver", "corsheaders"],
+    CORS_ALLOW_ALL_ORIGINS=True,
     MIDDLEWARE=[
         "corsheaders.middleware.CorsMiddleware",
     ],
@@ -55,11 +53,9 @@ def hello(request):
 
 
 def capitalize_sheet_names_prompt(request):
-    # Instantiate a book object with the parsed request body
     data = json.loads(request.body.decode("utf-8"))
     book = xw.Book(json=data)
 
-    # Show a prompt
     book.app.alert(
         prompt="This will capitalize all sheet names!",
         title="Are you sure?",
@@ -68,20 +64,16 @@ def capitalize_sheet_names_prompt(request):
         callback="capitalizeSheetNames",
     )
 
-    # Return a JSON response
     return JsonResponse(book.json())
 
 
 def capitalize_sheet_names(request):
-    # Instantiate a book object with the parsed request body
     data = json.loads(request.body.decode("utf-8"))
     book = xw.Book(json=data)
 
-    # Capitalize all sheet names
     for sheet in book.sheets:
         sheet.name = sheet.name.upper()
 
-    # Return a JSON response
     return JsonResponse(book.json())
 
 

@@ -3,8 +3,8 @@ FROM python:3.11-slim
 # Makes sure that logs are shown immediately
 ENV PYTHONUNBUFFERED=1
 
-COPY ./requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+COPY ./requirements-fastapi.txt .
+RUN pip install --no-cache-dir -r requirements-fastapi.txt
 # Watchfiles from uvicorn[standard] breaks reload inside Docker
 RUN pip uninstall watchfiles -y
 
