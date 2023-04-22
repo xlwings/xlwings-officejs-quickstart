@@ -15,6 +15,7 @@ BASE_DIR = Path(__file__).resolve().parent
 
 settings.configure(
     DEBUG=True,
+    SECRET_KEY="change_me",
     ROOT_URLCONF=__name__,
     TEMPLATES=[
         {
@@ -27,6 +28,7 @@ settings.configure(
     CORS_ALLOW_ALL_ORIGINS=True,
     MIDDLEWARE=[
         "corsheaders.middleware.CorsMiddleware",
+        __name__ + ".ErrorHandlerMiddleware",
     ],
 )
 
@@ -112,6 +114,21 @@ async def custom_functions_call(request):
     data = json.loads(request.body.decode("utf-8"))
     rv = await xw.pro.custom_functions_call(data, custom_functions)
     return JsonResponse({"result": rv})
+
+
+class ErrorHandlerMiddleware:
+    """Show a short error message in an alert"""
+
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        response = self.get_response(request)
+        return response
+
+    def process_exception(self, request, exception):
+        # This handles all exceptions, so you may want to make this more restrictive
+        return HttpResponse(repr(exception), status=500, content_type="text/plain")
 
 
 urlpatterns = [
