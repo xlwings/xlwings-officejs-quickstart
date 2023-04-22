@@ -10,7 +10,11 @@ This quickstart shows you:
 * How to call Python directly from a Ribbon button
 * How to use custom functions (a.k.a user-defined functions or UDFs)
 
-xlwings Server, the backend for Office.js-based add-ins, can be used with any web framework and the quickstart repo therefore contains various implementations such as ``app/server_fastapi.py`` or ``app/server_starlette.py``.
+xlwings Server, the backend for Office.js-based add-ins, can be used with any web framework and the quickstart repo therefore contains various implementations:
+
+* FastAPI: ``app/server_fastapi.py``
+* Starlette: ``app/server_starlette.py``
+* Django: ``app/server_django.py``
 
 At the end of this quickstart, you'll have a working environment for local development.
 
@@ -27,20 +31,27 @@ At the end of this quickstart, you'll have a working environment for local devel
 
 4. **Install Python dependencies**: 
    
-   * Local Python installation: create a virtual or Conda environment and install the Python dependencies by running: ``pip install -r requirements.txt``.
+   * Local Python installation: create a virtual or Conda environment and install the Python dependencies by running (replace ``fastapi`` with your framework): ``pip install -r requirements-fastapi.txt``.
    * Docker: skip this step.
+
 5. **xlwings license key**:
 
    Get a free `trial license key <https://www.xlwings.org/trial>`_ and install it as follows:
 
    * Local Python installation: ``xlwings license update -k your-license-key``
    * Docker: set the license key as ``XLWINGS_LICENSE_KEY`` environment variable. The easiest way to do this is to run ``cp .env.template .env`` in a Terminal/Command Prompt and fill in the license key in the ``.env`` file.
-6. **Start web app**: 
 
-   * Local Python installation: with the previously created virtual/Conda env activated, start the Python development server by running the Python file with the desired implementation. For example, to run the backend with FastAPI, run the following: ``python app/server_fastapi.py``. You could also run the file via the capabilities offered by your editor.
-   * Docker: run ``docker compose up`` instead. Note that Docker by default uses the FastAPI implementation, so you'll need to edit ``docker-compose.yaml`` if you want to change that.
+6. **Start web app**
+
+   * Local Python installation: with the previously created virtual/Conda env activated, start the Python development server by running the Python file with the desired implementation
+
+     - FastAPI: ``python app/server_fastapi.py``
+     - Starlette: ``python app/server_starlette.py``
+     - Django: ``python app/server_django.py runsslserver --certificate certs/localhost+2.pem --key certs/localhost+2-key.pem`` Note that if you're using VBA, Office Scripts, or Google Apps Script instead of Office.js, you can also use the Django development server by running ``python app/server_django.py runserver`` instead (Office.js is the only client to support custom functions though).
+
+   * Docker: run ``docker compose up`` instead. Note that Docker has been set up with FastAPI, so you would need to edit ``docker-compose.yaml`` and ``Dockerfile`` if you want to use a different framework.
    
-   If you see the following, the server is up and running:
+   If you see the following, the server is up and running (showing the FastAPI implementation):
 
    .. code-block:: text
 
