@@ -14,6 +14,7 @@ xlwings Server, the backend for Office.js-based add-ins, can be used with any we
 
 * FastAPI: ``app/server_fastapi.py``
 * Starlette: ``app/server_starlette.py``
+* Flask: ``app/server_flask.py``
 * Django: ``app/server_django.py``
 
 At the end of this quickstart, you'll have a working environment for local development.
@@ -47,6 +48,7 @@ At the end of this quickstart, you'll have a working environment for local devel
 
      - FastAPI: ``python app/server_fastapi.py``
      - Starlette: ``python app/server_starlette.py``
+     - Flask: ``python app/server_flask.py``
      - Django: ``python app/server_django.py runsslserver --certificate certs/localhost+2.pem --key certs/localhost+2-key.pem`` Note that if you're using VBA, Office Scripts, or Google Apps Script instead of Office.js, you can also use the Django development server by running ``python app/server_django.py runserver`` instead (Office.js is the only client to support custom functions though).
 
    * Docker: run ``docker compose up`` instead. Note that Docker has been set up with FastAPI, so you would need to edit ``docker-compose.yaml`` and ``Dockerfile`` if you want to use a different framework.
