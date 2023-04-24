@@ -110,17 +110,20 @@ app.mount("/", StaticFiles(directory=this_dir), name="home")
 StaticFiles.is_not_modified = lambda *args, **kwargs: False
 
 
-# Show XlwingsError in clear text instead of "Internal Server Error"
-@app.exception_handler(xw.XlwingsError)
+@app.exception_handler(Exception)
 async def xlwings_exception_handler(request, exception):
+    # This handles all exceptions, so you may want to make this more restrictive
     return PlainTextResponse(
         str(exception), status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
     )
 
 
-# Required when called from Excel on the web
-app.add_middleware(
-    CORSMiddleware,
+# Office Scripts and custom functions in Excel on the web require CORS
+# Using app.add_middleware won't add the CORS headers if you handle the root "Exception"
+# in an exception handler (it would require a specific exception type). Note that
+# cors_app is used in the uvicorn.run() call below.
+cors_app = CORSMiddleware(
+    app=app,
     allow_origins="*",
     allow_methods=["POST"],
     allow_headers=["*"],
@@ -131,7 +134,7 @@ if __name__ == "__main__":
     import uvicorn
 
     uvicorn.run(
-        "server_fastapi:app",
+        "server_fastapi:cors_app",
         host="127.0.0.1",
         port=8000,
         reload=True,
