@@ -111,7 +111,7 @@ StaticFiles.is_not_modified = lambda *args, **kwargs: False
 
 
 @app.exception_handler(Exception)
-async def xlwings_exception_handler(request, exception):
+async def exception_handler(request, exception):
     # This handles all exceptions, so you may want to make this more restrictive
     return PlainTextResponse(
         str(exception), status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
