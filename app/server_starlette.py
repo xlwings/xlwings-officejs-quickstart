@@ -104,6 +104,8 @@ async def xlwings_exception_handler(request, exc):
     return PlainTextResponse(str(exc), status_code=500)
 
 
+# Note that Starlette only handles CORS for specific exception,
+# not for the root Exception
 exception_handlers = {xw.XlwingsError: xlwings_exception_handler}
 
 routes = [
@@ -126,8 +128,12 @@ routes = [
 # Never cache static files
 StaticFiles.is_not_modified = lambda *args, **kwargs: False
 
-# Required when called from Excel on the web
-middleware = [Middleware(CORSMiddleware, allow_origins=["*"])]
+# Office Scripts and custom functions in Excel on the web require CORS
+middleware = [
+    Middleware(
+        CORSMiddleware, allow_origins=["*"], allow_methods=["POST"], allow_headers=["*"]
+    )
+]
 
 app = Starlette(
     debug=True,
