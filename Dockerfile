@@ -15,7 +15,7 @@ EXPOSE 8000
 WORKDIR /app
 
 # This is for single-container deployments (multiple-workers)
-CMD ["gunicorn", "server_fastapi:app", \
+CMD ["gunicorn", "server_fastapi:cors_app", \
      "--bind", "0.0.0.0:8000", \
      "--access-logfile", "-", \
      "--workers", "2", \
