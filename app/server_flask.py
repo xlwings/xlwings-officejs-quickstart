@@ -59,12 +59,12 @@ def capitalize_sheet_names():
 
 @app.route("/xlwings/alert")
 def alert():
+    """Boilerplate required by book.app.alert() and to show unhandled exceptions"""
     prompt = request.args.get("prompt")
     title = request.args.get("title")
     buttons = request.args.get("buttons")
     mode = request.args.get("mode")
     callback = request.args.get("callback")
-    """Boilerplate required by book.app.alert() and to show unhandled exceptions"""
     return render_template(
         "xlwings-alert.html",
         prompt=markupsafe.Markup(prompt.replace("\n", "<br>")),
