@@ -22,39 +22,39 @@ def root():
 @app.route("/hello", methods=["POST"])
 def hello():
     # Instantiate a Book object with the deserialized request body
-    book = xw.Book(json=request.json)
+    with xw.Book(json=request.json) as book:
 
-    # Use xlwings as usual
-    sheet = book.sheets[0]
-    cell = sheet["A1"]
-    if cell.value == "Hello xlwings!":
-        cell.value = "Bye xlwings!"
-    else:
-        cell.value = "Hello xlwings!"
+        # Use xlwings as usual
+        sheet = book.sheets[0]
+        cell = sheet["A1"]
+        if cell.value == "Hello xlwings!":
+            cell.value = "Bye xlwings!"
+        else:
+            cell.value = "Hello xlwings!"
 
-    # Pass the following back as the response
-    return book.json()
+        # Pass the following back as the response
+        return book.json()
 
 
 @app.route("/capitalize-sheet-names-prompt", methods=["POST"])
 def capitalize_sheet_names_prompt():
-    book = xw.Book(json=request.json)
-    book.app.alert(
-        prompt="This will capitalize all sheet names!",
-        title="Are you sure?",
-        buttons="ok_cancel",
-        # this is the JS function name that gets called when the user clicks a button
-        callback="capitalizeSheetNames",
-    )
-    return book.json()
+    with xw.Book(json=request.json) as book:
+        book.app.alert(
+            prompt="This will capitalize all sheet names!",
+            title="Are you sure?",
+            buttons="ok_cancel",
+            # this is the JS function name that gets called when the user clicks a button
+            callback="capitalizeSheetNames",
+        )
+        return book.json()
 
 
 @app.route("/capitalize-sheet-names", methods=["POST"])
 def capitalize_sheet_names():
-    book = xw.Book(json=request.json)
-    for sheet in book.sheets:
-        sheet.name = sheet.name.upper()
-    return book.json()
+    with xw.Book(json=request.json) as book:
+        for sheet in book.sheets:
+            sheet.name = sheet.name.upper()
+        return book.json()
 
 
 @app.route("/xlwings/alert")

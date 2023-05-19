@@ -1,10 +1,11 @@
 from pathlib import Path
+from typing import Annotated
 
 import custom_functions
 import jinja2
 import markupsafe
 import xlwings as xw
-from fastapi import Body, FastAPI, Request, status
+from fastapi import Body, FastAPI, Request, status, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse, PlainTextResponse
 from fastapi.staticfiles import StaticFiles
@@ -14,6 +15,18 @@ app = FastAPI()
 
 this_dir = Path(__file__).resolve().parent
 
+def get_book(body: dict):
+    """Dependency that returns the calling book and cleans it up again"""
+    book = xw.Book(json=body)
+    try:
+        yield book
+    finally:
+        book.close()
+
+
+# This is the type annotation that we're using in the endpoints
+Book = Annotated[xw.Book, Depends(get_book)]
+
 
 @app.get("/")
 async def root():
@@ -21,11 +34,7 @@ async def root():
 
 
 @app.post("/hello")
-async def hello(data: dict = Body):
-    # Instantiate a Book object with the deserialized request body
-    book = xw.Book(json=data)
-
-    # Use xlwings as usual
+async def hello(book: Book):
     sheet = book.sheets[0]
     cell = sheet["A1"]
     if cell.value == "Hello xlwings!":
@@ -38,8 +47,7 @@ async def hello(data: dict = Body):
 
 
 @app.post("/capitalize-sheet-names-prompt")
-async def capitalize_sheet_names_prompt(data: dict = Body):
-    book = xw.Book(json=data)
+async def capitalize_sheet_names_prompt(book: Book):
     book.app.alert(
         prompt="This will capitalize all sheet names!",
         title="Are you sure?",
@@ -51,8 +59,7 @@ async def capitalize_sheet_names_prompt(data: dict = Body):
 
 
 @app.post("/capitalize-sheet-names")
-async def capitalize_sheet_names(data: dict = Body):
-    book = xw.Book(json=data)
+async def capitalize_sheet_names(book: Book):
     for sheet in book.sheets:
         sheet.name = sheet.name.upper()
     return book.json()

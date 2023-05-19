@@ -40,43 +40,43 @@ def root(request):
 def hello(request):
     # Instantiate a book object with the parsed request body
     data = json.loads(request.body.decode("utf-8"))
-    book = xw.Book(json=data)
+    with xw.Book(json=data) as book:
 
-    # Use xlwings as usual
-    sheet = book.sheets[0]
-    cell = sheet["A1"]
-    if cell.value == "Hello xlwings!":
-        cell.value = "Bye xlwings!"
-    else:
-        cell.value = "Hello xlwings!"
+        # Use xlwings as usual
+        sheet = book.sheets[0]
+        cell = sheet["A1"]
+        if cell.value == "Hello xlwings!":
+            cell.value = "Bye xlwings!"
+        else:
+            cell.value = "Hello xlwings!"
 
-    # Return a JSON response
-    return JsonResponse(book.json())
+        # Return a JSON response
+        return JsonResponse(book.json())
 
 
 def capitalize_sheet_names_prompt(request):
     data = json.loads(request.body.decode("utf-8"))
-    book = xw.Book(json=data)
+    with xw.Book(json=data) as book:
 
-    book.app.alert(
-        prompt="This will capitalize all sheet names!",
-        title="Are you sure?",
-        buttons="ok_cancel",
-        # this is the JS function name that gets called when the user clicks a button
-        callback="capitalizeSheetNames",
-    )
+        book.app.alert(
+            prompt="This will capitalize all sheet names!",
+            title="Are you sure?",
+            buttons="ok_cancel",
+            # this is the JS function name that gets called when the user clicks a button
+            callback="capitalizeSheetNames",
+        )
 
-    return JsonResponse(book.json())
+        return JsonResponse(book.json())
 
 
 def capitalize_sheet_names(request):
     data = json.loads(request.body.decode("utf-8"))
-    book = xw.Book(json=data)
+    with xw.Book(json=data) as book:
 
-    for sheet in book.sheets:
-        sheet.name = sheet.name.upper()
+        for sheet in book.sheets:
+            sheet.name = sheet.name.upper()
 
-    return JsonResponse(book.json())
+        return JsonResponse(book.json())
 
 
 def alert(request):

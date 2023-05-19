@@ -22,39 +22,39 @@ async def root(request):
 async def hello(request):
     # Instantiate a Book object with the deserialized request body
     data = await request.json()
-    book = xw.Book(json=data)
+    with xw.Book(json=data) as book:
 
-    # Use xlwings as usual
-    sheet = book.sheets[0]
-    cell = sheet["A1"]
-    if cell.value == "Hello xlwings!":
-        cell.value = "Bye xlwings!"
-    else:
-        cell.value = "Hello xlwings!"
+        # Use xlwings as usual
+        sheet = book.sheets[0]
+        cell = sheet["A1"]
+        if cell.value == "Hello xlwings!":
+            cell.value = "Bye xlwings!"
+        else:
+            cell.value = "Hello xlwings!"
 
-    # Pass the following back as the response
-    return JSONResponse(book.json())
+        # Pass the following back as the response
+        return JSONResponse(book.json())
 
 
 async def capitalize_sheet_names_prompt(request):
     data = await request.json()
-    book = xw.Book(json=data)
-    book.app.alert(
-        prompt="This will capitalize all sheet names!",
-        title="Are you sure?",
-        buttons="ok_cancel",
-        # this is the JS function name that gets called when the user clicks a button
-        callback="capitalizeSheetNames",
-    )
-    return JSONResponse(book.json())
+    with xw.Book(json=data) as book:
+        book.app.alert(
+            prompt="This will capitalize all sheet names!",
+            title="Are you sure?",
+            buttons="ok_cancel",
+            # this is the JS function name that gets called when the user clicks a button
+            callback="capitalizeSheetNames",
+        )
+        return JSONResponse(book.json())
 
 
 async def capitalize_sheet_names(request):
     data = await request.json()
-    book = xw.Book(json=data)
-    for sheet in book.sheets:
-        sheet.name = sheet.name.upper()
-    return JSONResponse(book.json())
+    with xw.Book(json=data) as book:
+        for sheet in book.sheets:
+            sheet.name = sheet.name.upper()
+        return JSONResponse(book.json())
 
 
 async def alert(request):

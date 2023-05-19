@@ -2,5 +2,5 @@ Flask[async]==2.2.3
 Flask-Cors==3.0.10
 gunicorn==20.1.0
 jinja2==3.1.2
-pandas==1.5.3
-xlwings==0.30.5
+pandas==2.0.1
+xlwings==0.30.7
