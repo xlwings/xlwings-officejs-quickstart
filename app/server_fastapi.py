@@ -5,7 +5,7 @@ import custom_functions
 import jinja2
 import markupsafe
 import xlwings as xw
-from fastapi import Body, FastAPI, Request, status, Depends
+from fastapi import Body, Depends, FastAPI, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse, PlainTextResponse
 from fastapi.staticfiles import StaticFiles
@@ -14,6 +14,7 @@ from fastapi.templating import Jinja2Templates
 app = FastAPI()
 
 this_dir = Path(__file__).resolve().parent
+
 
 def get_book(body: dict):
     """Dependency that returns the calling book and cleans it up again"""

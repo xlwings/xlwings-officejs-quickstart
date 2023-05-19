@@ -23,7 +23,6 @@ async def hello(request):
     # Instantiate a Book object with the deserialized request body
     data = await request.json()
     with xw.Book(json=data) as book:
-
         # Use xlwings as usual
         sheet = book.sheets[0]
         cell = sheet["A1"]

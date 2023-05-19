@@ -23,7 +23,6 @@ def root():
 def hello():
     # Instantiate a Book object with the deserialized request body
     with xw.Book(json=request.json) as book:
-
         # Use xlwings as usual
         sheet = book.sheets[0]
         cell = sheet["A1"]

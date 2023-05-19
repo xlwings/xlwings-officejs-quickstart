@@ -41,7 +41,6 @@ def hello(request):
     # Instantiate a book object with the parsed request body
     data = json.loads(request.body.decode("utf-8"))
     with xw.Book(json=data) as book:
-
         # Use xlwings as usual
         sheet = book.sheets[0]
         cell = sheet["A1"]
@@ -57,7 +56,6 @@ def hello(request):
 def capitalize_sheet_names_prompt(request):
     data = json.loads(request.body.decode("utf-8"))
     with xw.Book(json=data) as book:
-
         book.app.alert(
             prompt="This will capitalize all sheet names!",
             title="Are you sure?",
@@ -72,7 +70,6 @@ def capitalize_sheet_names_prompt(request):
 def capitalize_sheet_names(request):
     data = json.loads(request.body.decode("utf-8"))
     with xw.Book(json=data) as book:
-
         for sheet in book.sheets:
             sheet.name = sheet.name.upper()
 
