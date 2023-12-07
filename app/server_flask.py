@@ -76,17 +76,20 @@ def alert():
 
 @app.route("/xlwings/custom-functions-meta")
 def custom_functions_meta():
-    return xw.pro.custom_functions_meta(custom_functions)
+    return xw.server.custom_functions_meta(custom_functions)
 
 
 @app.route("/xlwings/custom-functions-code")
 def custom_functions_code():
-    return xw.pro.custom_functions_code(custom_functions)
+    return Response(
+        xw.server.custom_functions_code(custom_functions),
+        mimetype="application/javascript",
+    )
 
 
 @app.route("/xlwings/custom-functions-call", methods=["POST"])
 async def custom_functions_call():
-    rv = await xw.pro.custom_functions_call(request.json, custom_functions)
+    rv = await xw.server.custom_functions_call(request.json, custom_functions)
     return {"result": rv}
 
 

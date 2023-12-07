@@ -3,4 +3,4 @@ django-sslserver==0.22
 django-cors-headers==3.14.0
 Jinja2==3.1.2
 pandas==2.0.1
-xlwings==0.30.7
+xlwings==0.30.12

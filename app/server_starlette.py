@@ -7,7 +7,7 @@ import xlwings as xw
 from starlette.applications import Starlette
 from starlette.middleware import Middleware
 from starlette.middleware.cors import CORSMiddleware
-from starlette.responses import JSONResponse, PlainTextResponse
+from starlette.responses import JSONResponse, PlainTextResponse, Response
 from starlette.routing import Mount, Route
 from starlette.staticfiles import StaticFiles
 from starlette.templating import Jinja2Templates
@@ -73,16 +73,19 @@ async def alert(request):
 
 
 async def custom_functions_meta(request):
-    return JSONResponse(xw.pro.custom_functions_meta(custom_functions))
+    return JSONResponse(xw.server.custom_functions_meta(custom_functions))
 
 
 async def custom_functions_code(request):
-    return PlainTextResponse(xw.pro.custom_functions_code(custom_functions))
+    return Response(
+        xw.server.custom_functions_code(custom_functions),
+        media_type="application/javascript",
+    )
 
 
 async def custom_functions_call(request):
     data = await request.json()
-    rv = await xw.pro.custom_functions_call(data, custom_functions)
+    rv = await xw.server.custom_functions_call(data, custom_functions)
     return JSONResponse({"result": rv})
 
 

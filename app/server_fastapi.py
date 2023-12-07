@@ -7,7 +7,7 @@ import markupsafe
 import xlwings as xw
 from fastapi import Body, Depends, FastAPI, Request, status
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import HTMLResponse, PlainTextResponse
+from fastapi.responses import HTMLResponse, PlainTextResponse, Response
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
@@ -86,17 +86,20 @@ async def alert(
 
 @app.get("/xlwings/custom-functions-meta")
 async def custom_functions_meta():
-    return xw.pro.custom_functions_meta(custom_functions)
+    return xw.server.custom_functions_meta(custom_functions)
 
 
 @app.get("/xlwings/custom-functions-code")
 async def custom_functions_code():
-    return PlainTextResponse(xw.pro.custom_functions_code(custom_functions))
+    return Response(
+        content=xw.server.custom_functions_code(custom_functions),
+        media_type="text/javascript",
+    )
 
 
 @app.post("/xlwings/custom-functions-call")
 async def custom_functions_call(data: dict = Body):
-    rv = await xw.pro.custom_functions_call(data, custom_functions)
+    rv = await xw.server.custom_functions_call(data, custom_functions)
     return {"result": rv}
 
 

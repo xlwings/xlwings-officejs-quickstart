@@ -96,20 +96,21 @@ def alert(request):
 
 def custom_functions_meta(request):
     """Boilerplate required by custom functions"""
-    return JsonResponse(xw.pro.custom_functions_meta(custom_functions))
+    return JsonResponse(xw.server.custom_functions_meta(custom_functions))
 
 
 def custom_functions_code(request):
     """Boilerplate required by custom functions"""
     return HttpResponse(
-        xw.pro.custom_functions_code(custom_functions), content_type="text/plain"
+        xw.server.custom_functions_code(custom_functions),
+        content_type="application/javascript",
     )
 
 
 async def custom_functions_call(request):
     """Boilerplate required by custom functions"""
     data = json.loads(request.body.decode("utf-8"))
-    rv = await xw.pro.custom_functions_call(data, custom_functions)
+    rv = await xw.server.custom_functions_call(data, custom_functions)
     return JsonResponse({"result": rv})
 
 
