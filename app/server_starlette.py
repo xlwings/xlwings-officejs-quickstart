@@ -63,7 +63,9 @@ async def alert(request):
         "xlwings-alert.html",
         {
             "request": request,
-            "prompt": markupsafe.Markup(params["prompt"].replace("\n", "<br>")),
+            "prompt": markupsafe.escape(params["prompt"]).replace(
+                "\n", markupsafe.Markup("<br>")
+            ),
             "title": params["title"],
             "buttons": params["buttons"],
             "mode": params["mode"],

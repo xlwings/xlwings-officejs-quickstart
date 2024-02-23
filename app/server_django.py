@@ -85,7 +85,7 @@ def alert(request):
     callback = request.GET.get("callback")
     template = loader.get_template("xlwings-alert.html")
     context = {
-        "prompt": markupsafe.Markup(prompt.replace("\n", "<br>")),
+        "prompt": markupsafe.escape(prompt).replace("\n", markupsafe.Markup("<br>")),
         "title": title,
         "buttons": buttons,
         "mode": mode,
