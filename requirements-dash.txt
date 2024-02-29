@@ -1,0 +1,8 @@
+dash
+Flask
+gunicorn
+jinja2
+numpy
+pandas
+Werkzeug
+xlwings
