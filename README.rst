@@ -1,3 +1,6 @@
+> [!caution]
+> Use https://github.com/xlwings/xlwings-server instead
+
 Build Office.js add-ins and custom functions with Python and xlwings
 --------------------------------------------------------------------
 
